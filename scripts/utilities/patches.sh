@@ -115,6 +115,41 @@ at_get_patch ()
 	echo ${fpath} >> ${AT_TEMP_INSTALL}/$(basename $(pwd))-copy-queue
 }
 
+# Get a local patch 
+# Parameters:
+#    $1 - Path of the patch.
+# Optional parameters:
+#    $2 - File name of the patch.
+at_get_local_patch ()
+{
+	if [ ${#} -ne 1 -a ${#} -ne 2 ]; then
+		echo "Function at_get_patch expects 1 or 2 parameters."
+		return 1
+	fi
+
+	local url=${1}
+	local fname=$(basename ${url})
+
+	# Set alternative filename if optional argument given
+	if [ ${#} -ge 3 ]; then
+		fname=${2}
+	fi
+
+	local fpath=$(pwd)/${chksum}/${fname}
+
+	# If the patch doesn't exist or is corrupted, download it again.
+	if [ ! -e ${fpath} ]; then
+		if ! cp ${url} ${fpath}; then
+			echo "Failed to download from ${url}"
+			return 1
+		fi
+	else
+		echo "Patch is already available: ${fname}"
+	fi
+
+	# Add to the copy queue (to be copied after the rsync).
+	echo ${fpath} >> ${AT_TEMP_INSTALL}/$(basename $(pwd))-copy-queue
+}
 
 # Download a patch, if necessary, trim it and verify its checksum.
 # Parameters:

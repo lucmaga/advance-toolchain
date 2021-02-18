@@ -66,6 +66,9 @@ atsrc_get_patches ()
 		'https://raw.githubusercontent.com/powertechpreview/powertechpreview/master/GCC%20PowerPC%20Backport/11/Revert-Default-to-DWARF5.patch' \
 		0cc724faa8c2db5e686d70900b323365 || return ${?}
 
+	at_get_local_patch \
+		'/home/lamm/patches/remove-rpath.patch' || return ${?}
+
 	return 0
 }
 
@@ -82,4 +85,8 @@ atsrc_apply_patches ()
 	patch -p1 \
 	      < Revert-Default-to-DWARF5.patch \
 		|| return ${?}
+
+	patch -p1 \
+	      < remove-rpath.patch \
+	        || return ${?}
 }
