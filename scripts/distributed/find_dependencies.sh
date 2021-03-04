@@ -85,8 +85,8 @@ for file in "${@}"; do
 	# Get the RUNPATH.  The RUNPATH will tell us if this file was built
 	# using AT or not.
 	runpath=$(${readelf_path} -d ${file} \
-			| grep 'RUNPATH' \
-			| sed 's/^.*\: \[\(.*\)\]$/\1/')
+			| grep 'interpreter' \
+			| sed 's/\[.*\: \(.*\)\]/\1/')
 	at_path=${runpath%%/lib*}
 	if [[ ${is_cross} != "yes" && ${runpath} == /opt/at* ]]; then
 		ldd_path=${at_path}/bin/ldd
